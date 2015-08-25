@@ -1,0 +1,14 @@
+.zylcontainer{
+    margin-top: 50px;
+}
+.edit{
+    float:right;
+}
+
+.form button[type=submit]{
+    float: right;
+}
+
+#publishBox{
+    display: none;
+}
