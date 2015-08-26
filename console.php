@@ -37,8 +37,8 @@
                     <h3 class="panel-title">团队信息管理</h3>
                 </div>
                 <ul class="list-group">
-                    <li class="list-group-item">团队信息管理</li>
-                    <li class="list-group-item">团队类别管理</li>
+                    <li class="list-group-item"><a href="javascript:void(0)">团队信息管理</a></li>
+                    <li class="list-group-item"><a href="javascript:void(0)">团队类别管理</a></li>
                 </ul>
             </div>
         </div>
