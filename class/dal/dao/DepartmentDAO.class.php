@@ -5,9 +5,11 @@
  * Date: 2015/8/26
  * Time: 14:03
  */
-require('../entity/Department.class.php');
-require('../SqlHelper.class.php');
-class DepartmentDAO {
+require_once('SqlHelper.class.php');
+require_once('DAO.class.php');
+require_once(__DIR__.'/../entity/Department.class.php');
+class DepartmentDAO extends DAO{
+    var $pageSize = 6;
     function add($department){
         $row = SqlHelper::executeRows("INSERT INTO department VALUES (null,'$department->name');");
         return $row;
@@ -24,12 +26,33 @@ class DepartmentDAO {
         }
         return null;
     }
+
+    function getByPage($page)
+    {
+        $offset = ($page - 1) * $this->pageSize;
+        $departments = SqlHelper::executeObject("select * from department limit $offset, $this->pageSize");
+        return $departments;
+    }
+
+    function count()
+    {
+        $count = SqlHelper::executeObject("select count(*) total from department");
+        return $count[0]->total;
+    }
+
+    function countPage()
+    {
+        return ceil($this->count() / $this->pageSize);
+    }
     function getAll(){
         $departments = SqlHelper::executeObject("select * from department");
         return $departments;
     }
-    function save($department){
-
+    function update($newDepartment){
+        $id = $newDepartment->id;
+        $name = $newDepartment->name;
+        $row = SqlHelper::executeRows("UPDATE department SET name = '$name' WHERE id = $id;");
+        return $row;
     }
 }
 //$department = new Department(null,8);

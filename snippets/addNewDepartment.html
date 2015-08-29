@@ -1,0 +1,41 @@
+<div class="panel panel-primary" style="width: 800px;margin: 0 auto;position: absolute;left:0;z-index: 1111;"
+     id="publishBox">
+    <div class="panel-heading">添加新团队</div>
+    <div class="panel-body" style="margin: 0;padding-bottom: 10px;">
+        <div class="alert alert-danger" role="alert" style="display: none" id="errorBox">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" id="icon"></span>
+            <span class="sr-only">Error:</span>
+            <span id="errorMsg"></span>
+        </div>
+        <form class="form-inline form" style="margin: 0 auto;">
+            <div class="form-group">
+                <input type="text" class="form-control" id="departmentName" placeholder="团队名称" size="20">
+                <button type="button" class="btn btn-primary" style="margin-left: 10px;" onclick="submit1()">添加</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function submit1() {
+        $.ajax({
+            url: "restful/department.php/addition",
+            type: "POST",
+            data: 'departmentName='+$('#departmentName').val(),
+            success: function (data) {
+                var json = JSON.parse(data);
+                $("#errorBox").slideDown();
+                $("#errorMsg").text(json.msg);
+                if(json.result)
+                {
+                    $("#errorBox").removeClass("alert-danger").addClass("alert-success");
+                    $("#icon").removeClass("glyphicon-exclamation-sign").addClass("glyphicon-ok");
+                    seeDepartment(1);
+                }else{
+                    $("#errorBox").removeClass("alert-success").addClass("alert-danger");
+                    $("#icon").removeClass("glyphicon-ok").addClass("glyphicon-exclamation-sign");
+                }
+                $("#departmentName").val("");
+            }
+        })
+    }
+</script>
