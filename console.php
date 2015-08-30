@@ -31,7 +31,7 @@
                     <h3 class="panel-title" id="panelTitle1">团队信息管理</h3>
                 </div>
                 <ul class="list-group">
-                    <li class="list-group-item"><a href="javascript:void(0)">团队信息管理</a></li>
+                    <li class="list-group-item"><a href="javascript:void(0)" onclick="seeInformation()">团队信息管理</a></li>
                     <li class="list-group-item"><a href="javascript:void(0)" onclick="seeDepartment()">团队类别管理</a></li>
                 </ul>
             </div>
@@ -40,7 +40,6 @@
             <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading" id="panelTitle2">团队信息管理</div>
-
                 <!-- Table -->
                 <table class="table table-hover " id="consoleTable">
                     <tr>
@@ -48,7 +47,7 @@
                         <th>信息标题</th>
                         <th>所属团队</th>
                     </tr>
-                    <tr>
+                 <!--   <tr>
                         <td>1</td>
                         <td>你好，你好</td>
                         <td>软件工程团队<span class="edit"><a href="javascript:void(0)">编辑</a>&nbsp;<a
@@ -83,10 +82,10 @@
                         <td>こんにちは</td>
                         <td>对日外包团队<span class="edit"><a href="javascript:void(0)">编辑</a>&nbsp;<a
                                     href="javascript:void(0)">删除</a></span></td>
-                    </tr>
+                    </tr>-->
                 </table>
                 <nav style="position: relative" id="page">
-                    <ul class="pagination" style="position: absolute;left:0;right: 0;">
+                  <!--  <ul class="pagination" style="position: absolute;left:0;right: 0;">
                         <li>
                             <a href="#" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
@@ -102,7 +101,7 @@
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
-                    </ul>
+                    </ul>-->
                 </nav>
             </div>
             <div style="position:relative;margin:80px 0 0;" id="publishContainer">

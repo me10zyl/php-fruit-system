@@ -16,18 +16,17 @@ class InformationDAO extends DAO
     {
         $title = $information->title;
         $content = $information->content;
-        $time = $information->time;
         $department_id= $information->department->id;
-        $row = SqlHelper::executeRows("INSERT INTO information(id,title,content,time,department_id)VALUES(null,,$title,$content,$time,$department_id);");
+        $row = SqlHelper::executeRows("INSERT INTO information(id,title,content,time,department_id)VALUES(null,'$title','$content',now(),$department_id);");
         return $row;
     }
 
     function del($information){
-        $row = SqlHelper::executeRows("DELETE FROM $information WHERE id = $information->id;");
+        $row = SqlHelper::executeRows("DELETE FROM information WHERE id = $information->id;");
         return $row;
     }
     function get($id){
-        $informations = SqlHelper::executeObject("select * from information where id = $id");
+        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id where id = $id");
         if(count($informations) > 0)
         {
             return $informations[0];
@@ -38,7 +37,7 @@ class InformationDAO extends DAO
     function getByPage($page)
     {
         $offset = ($page - 1) * $this->pageSize;
-        $informations = SqlHelper::executeObject("select * from information limit $offset, $this->pageSize");
+        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id limit $offset, $this->pageSize");
         return $informations;
     }
 
@@ -53,7 +52,7 @@ class InformationDAO extends DAO
         return ceil($this->count() / $this->pageSize);
     }
     function getAll(){
-        $informations = SqlHelper::executeObject("select * from information");
+        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id;");
         return $informations;
     }
     function update($newInformation){
