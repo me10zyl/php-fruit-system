@@ -4,7 +4,6 @@ define('DB_HOST','localhost');
 define('DB_USER_NAME','root');
 define('DB_USER_PWD','');
 define('DB_NAME','fruit_db');
-
 /**
  * 这是一个工具类，作用是完成对数据库的操作
  */
@@ -36,8 +35,7 @@ class SqlHelper
     public static function executeResource($sql)
     {
         if(empty(self::$conn)) self::openDB();
-        
-        $res = mysql_query($sql, self::$conn) or die(mysql_error());
+        $res = mysql_query($sql, self::$conn) or die('{"result":false,"msg":"'.mysql_error().'"}');
         return $res;
     }
 

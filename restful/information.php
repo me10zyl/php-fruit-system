@@ -14,16 +14,33 @@ $pathInfo = getPathInfo($currentFileName);
 $informationBiz = new InformationBiz();
 switch ($pathInfo) {
     case 'list':
-        $page = $_POST['page'];
-        if (isset($page) && !empty($page)) {
+        if (isset($_POST['page']) && !empty($_POST['page'])) {
+            $page = $_POST['page'];
             $totalPage = $informationBiz->totalPage();
             $pageSize = $informationBiz->pageSize();
+            if(isset($_POST['pageSize']) && !empty($_POST['pageSize']))
+            {
+                $pageSize = $_POST['pageSize'];
+            }
             print "{\"page\":$page,\"totalPage\":$totalPage,\"pageSize\":$pageSize,\"list\":";
-            print json_encode($informationBiz->getByPage($page));
+            if(isset($_POST['reverse']))
+            {
+                if($_POST['reverse'])
+                {
+                    print json_encode($informationBiz->getByPageViaPageSizeDesc($page,$pageSize));
+                    print "}";
+                    break;
+                }
+            }
+            print json_encode($informationBiz->getByPageViaPageSize($page,$pageSize));
             print "}";
         } else {
             print json_encode($informationBiz->getAll());
         }
+        break;
+    case 'get':
+        $id = $_POST['id'];
+        print json_encode($informationBiz->get($id));
         break;
     case 'addition':
         $title = $_POST['title'];
@@ -62,20 +79,22 @@ switch ($pathInfo) {
         break;
     case 'edit':
         $id = $_POST['id'];
-        $departmentName = $_POST['departmentName'];
+        $title = $_POST['title'];
+        $content = $_POST['content'];
+        $department = $_POST['department'];
+        $time = $_POST['time'];
         $msg = new Message();
-        if (isset($id) && !empty($id) && isset($departmentName) && !empty($departmentName)) {
-            $newDepartment = new Department($departmentName, $id);
-            $res = $informationBiz->edit($newDepartment);
-            if ($res) {
-                $msg->result = true;
-                $msg->msg = '编辑成功';
-                print json_encode($msg);
-            } else {
-                $msg->result = false;
-                $msg->msg = '编辑失败';
-                print json_encode($msg);
-            }
+        $newInformation = new Information();
+        $newInformation->id = $id;
+        $newInformation->title = $title;
+        $newInformation->content = $content;
+        $newInformation->department = new Department("no use",$department);
+        $newInformation->time = $time;
+        $res = $informationBiz->edit($newInformation);
+        if ($res) {
+            $msg->result = true;
+            $msg->msg = '编辑成功';
+            print json_encode($msg);
         } else {
             $msg->result = false;
             $msg->msg = '编辑失败';

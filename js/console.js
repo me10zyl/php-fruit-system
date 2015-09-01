@@ -22,6 +22,7 @@ $(function () {
     })
     seeInformation();
 })
+
 var globalPage;
 function seeInformation(refreshPart, page) {
     $.ajax({
@@ -62,6 +63,10 @@ function seeInformation(refreshPart, page) {
 
         }
     })
+}
+
+function editInformation(id){
+    location.href = "detail.php?id="+id;
 }
 function deleteInformation(id){
     $.ajax({

@@ -4,7 +4,15 @@
  * User: ZyL
  * Date: 2015/8/24
  * Time: 15:22
- */ ?>
+ */
+require_once('class/bal/InformationBiz.class.php');
+require_once('class/bal/DepartmentBiz.class.php');
+$id = $_GET['id'];
+$informationBiz = new InformationBiz();
+$information = $informationBiz->get($id);
+$departmentBiz = new DepartmentBiz();
+$departments = $departmentBiz->getAll();
+?>
 <htmL>
 <head>
     <meta charset="utf-8" content="text/html">
@@ -19,36 +27,183 @@
 </head>
 <body>
 <div class="container">
-    <div class="row"><div class="col-sm-2"> <a href="#" class="thumbnail">
-            <img src="images/mc.jpg" alt="...">
-        </a></div></div>
+    <div class="row">
+        <div class="col-sm-2"><a href="#" class="thumbnail">
+                <img src="images/mc.jpg" alt="...">
+            </a></div>
+    </div>
     <div class="panel panel-default">
-        <div><ol class="breadcrumb">
-                <li><a href="#">首页</a></li>
-                <li><a href="#">后台</a></li>
+        <div>
+            <ol class="breadcrumb">
+                <li><a href="index.php">首页</a></li>
+                <li><a href="console.php">后台</a></li>
                 <li class="active">详细信息</li>
-            </ol></div>
+            </ol>
+        </div>
         <div class="panel-body" style="padding-top: 0px">
             <div class="page-header" style="margin-top: 0px">
-                <h1>你好你好....<small><a href="javascript:void(0)"> 编辑</a></small></h1>
+                <h1><span id="informationTitle"><?php echo $information->title ?></span>
+                    <small><a href="javascript:void(0)" onclick="editInformationTitle()"> 编辑</a></small>
+                </h1>
             </div>
             <div style="overflow: auto;height: 300px;">
-                <pre>
-太行、王屋二山，方七百里，高万仞。本在冀州之南，河阳之北。
-
-北山愚公者，年且九十，面山而居。惩山北之塞，出入之迂也。聚室而谋曰：“吾与汝毕力平险，指通豫南，达于汉阴，可乎？”杂然相许。其妻献疑曰：“以君之力，曾不能损魁父之丘，如太行、王屋何？且焉置土石？”杂曰：“投诸渤海之尾，隐土之北。”遂率子孙荷担者三夫，叩石垦壤，箕畚运于渤海之尾。邻人京城氏之孀妻有遗男，始龀，跳往助之。寒暑易节，始一反焉。
-
-河曲智叟笑而止之曰：“甚矣，汝之不惠。以残年余力，曾不能毁山之一毛，其如土石何？”北山愚公长息曰：“汝心之固，固不可彻，曾不若孀妻弱子。虽我之死，有子存焉；子又生孙，孙又生子；子又有子，子又有孙；子子孙孙无穷匮也，而山不加增，何苦而不平？”河曲智叟亡以应。
-
-操蛇之神闻之，惧其不已也，告之于帝。帝感其诚，命夸娥氏二子负二山，一厝朔东，一厝雍南。自此，冀之南，汉之阴，无陇断焉。
+                <pre id="informationContent">
+                    <?php echo $information->content ?>
                 </pre>
-                <div style="float: right"><a href="javascript:void(0)"> 编辑</a></div>
+                <div style="float: right"><a href="javascript:void(0)" onclick="editInformationContent()"> 编辑</a></div>
             </div>
 
-            <div style="float:right">类别：软工团队<a href="javascript:void(0)"> 编辑</a></div>
+            <div style="float:right">类别： <input id="informationDepartmentId" type="hidden"
+                                                value="<?php echo $information->id ?>"><span
+                    id="informationDepartment"><?php echo $information->department ?></span><a href="javascript:void(0)"
+                                                                                               onclick="editInformationDepartment()">
+                    编辑</a></div>
         </div>
     </div>
+    <script>
+        var isEditing = false;
+        var oldHtml;
+        var $query;
+        function editInformationTitle() {
+            if (isEditing) {
+                return;
+            }
+            isEditing = true;
+            $query = $("#informationTitle");
+            oldHtml = $query.html();
+            $query.html("<input type='text'><button type='button' class='btn btn-primary btn-sm' style='margin-left: 10px;' onclick='confirmInformationTitle(<?php echo $information->id?>)'>确定</button><button type='button' class='btn btn-default btn-sm' style='margin-left: 10px;' onclick='cancelEdit()'>取消</button>");
+            $query.next().remove();
+        }
 
+        function editInformationContent() {
+            if (isEditing) {
+                return;
+            }
+            isEditing = true;
+            $query = $("#informationContent");
+            oldHtml = $query.html();
+            $query.html("<textarea type='text'resize='none' style='width:" + ($query.width()) + "px;height:" + $query.height() + "px'></textarea><br><button type='button' class='btn btn-primary btn-sm' style='margin-top: 10px;' onclick='confirmInformationContent(<?php echo $information->id?>)'>确定</button><button type='button' class='btn btn-default btn-sm' style='margin-top: 10px;margin-left:10px;' onclick='cancelEdit()'>取消</button>");
+            $query.next().remove();
+        }
+        function confirmInformationContent(id) {
+            var content = $query.children("textarea").val();
+            if (!content) {
+                cancelEdit();
+                return;
+            }
+            $.ajax({
+                url: "restful/information.php/edit",
+                type: "POST",
+                data: "id=" + id + "&title=&content=" + content + "&time=&department=",
+                success: function (data) {
+                    var json = JSON.parse(data);
+                    if (json.result) {
+                        seeInformationDetail(id);
+                    } else {
+                        alert(json.msg);
+                    }
+                }
+            })
+        }
+
+        function confirmInformationTitle(id) {
+            var title = $query.children("input").val();
+            if (!title) {
+                cancelEdit();
+                return;
+            }
+            $.ajax({
+                url: "restful/information.php/edit",
+                type: "POST",
+                data: "id=" + id + "&title=" + title + "&content=&time=&department=",
+                success: function (data) {
+                    var json = JSON.parse(data);
+                    if (json.result) {
+                        seeInformationDetail(id);
+                    } else {
+                        alert(json.msg);
+                    }
+                }
+            })
+        }
+        function cancelEdit() {
+            $query.html(oldHtml);
+            appendEditAnchor();
+        }
+        function appendEditAnchor() {
+            isEditing = false;
+            if ($query.selector == "#informationTitle") {
+                $query.parent().append("<small><a href='javascript:void(0)' onclick='editInformationTitle()'> 编辑</a></small>");
+            } else if ($query.selector == "#informationContent") {
+                $query.parent().append("<div style='float: right'><a href='javascript:void(0)' onclick='editInformationContent()'> 编辑</a></div>");
+            } else if ($query.selector == "#informationDepartment") {
+                $query.parent().append("<a href=javascript:void(0) onclick=editInformationDepartment()> 编辑</a>");
+            }
+        }
+
+
+        function editInformationDepartment() {
+            if (isEditing) {
+                return;
+            }
+            isEditing = true;
+            $query = $("#informationDepartment");
+            oldHtml = $query.html();
+            var code = "";
+            code += '<select>';
+            <?php
+                foreach($departments as $department)
+                {
+                    $id = $department->id;
+                    $name = $department->name;
+                    echo "\t\t\tcode += '<option value=\"$id\">$name</option>';\n";
+                }
+            ?>
+            code += '</select>';
+            $query.html(code + "<button type='button' class='btn btn-primary btn-sm' style='margin-left: 10px;' onclick='confirmInformationDepartment(<?php echo $information->id?>)'>确定</button><button type='button' class='btn btn-default btn-sm' style='margin-left: 10px;' onclick='cancelEdit()'>取消</button>");
+            $query.next().remove();
+        }
+        function confirmInformationDepartment(id)
+        {
+            var department = $query.children("select").val();
+            if (!department) {
+                cancelEdit();
+                return;
+            }
+            $.ajax({
+                url: "restful/information.php/edit",
+                type: "POST",
+                data: "id=" + id + "&title=&content=&time=&department="+department,
+                success: function (data) {
+                    var json = JSON.parse(data);
+                    if (json.result) {
+                        seeInformationDetail(id);
+                    } else {
+                        alert(json.msg);
+                    }
+                }
+            })
+        }
+        function seeInformationDetail(id) {
+            $.ajax({
+                url: "restful/information.php/get",
+                type: "POST",
+                data: "id=" + id,
+                success: function (data) {
+                    var information = JSON.parse(data);
+                    if ($query.selector == "#informationTitle") {
+                        $("#informationTitle").html(information.title);
+                    } else if ($query.selector == "#informationContent") {
+                        $("#informationContent").text(information.content);
+                    } else if ($query.selector == "#informationDepartment") {
+                        $("#informationDepartment").text(information.department);
+                    }
+                    appendEditAnchor();
+                }
+            })
+        }
+    </script>
 </div>
 </body>
 </htmL>
+

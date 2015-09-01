@@ -5,6 +5,9 @@
  * Date: 2015/8/24
  * Time: 15:16
  */
+require_once('class/bal/InformationBiz.class.php');
+$informationBiz = new InformationBiz();
+$informationPageOne = $informationBiz->getByPage(1);
 ?>
 <htmL>
 <head>
@@ -17,9 +20,9 @@
 <body>
 <div class="container zylcontainer">
     <div class="row">
-        <div class="col-md-10"><h1>后台管理</h1></div>
+        <div class="col-md-10"><a href="index.php">首页 >></a><h1>后台管理</div>
         <div class="col-md-2">
-            <button type="button" class="btn btn-default btn-lg" id="publishBtn">
+            <button type="button" class="btn btn-default btn-lg" id="publishBtn" style="position: relative;top:33px;">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> <span id="publishText">发布新的信息</span>
             </button>
         </div>
@@ -46,7 +49,21 @@
                         <th>#</th>
                         <th>信息标题</th>
                         <th>所属团队</th>
+                        <th>时间</th>
                     </tr>
+                    <?php
+                        $i = 0;
+                        foreach($informationPageOne as $information){
+                            $i++;
+                            print '<tr>';
+                            print '<td>'.$i.'</td>';
+                            print '<td>'.$information->title.'</td>';
+                            print '<td>'.$information->department.'</td>';
+                            print '<td>'.$information->time;
+                            print "<span class='edit'><a href='javascript:void(0)' onclick='editInformation(".$information->id.")'>编辑</a>&nbsp;<a href='javascript:void(0)' onclick='deleteInformation(".$information->id.")'>删除</a></span></td>";
+                            print '</tr>';
+                        }
+                    ?>
                  <!--   <tr>
                         <td>1</td>
                         <td>你好，你好</td>
@@ -85,6 +102,36 @@
                     </tr>-->
                 </table>
                 <nav style="position: relative" id="page">
+                    <ul class="pagination" style="position: absolute;left:0;right: 0;">
+                        <?php
+                        $totalPage = $informationBiz->totalPage();
+                        $page = 1;
+                        $state = "information";
+                        $function_name;
+                        if($state == "information")
+                        {
+                            $function_name = 'seeInformation';
+                        }else if($state == "department")
+                        {
+                            $function_name = 'seeDepartment';
+                        }
+                        if($page != 1)
+                        {
+                            echo "<li><a href=\"javascript:void(0)\" onclick=\"$function_name(1,".($page - 1).")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>";
+                        }
+                        for($i = 1;$i <= $totalPage;$i++)
+                        {
+                            echo "<li ";
+                            echo  $page == $i ? "class=\"active\"": "";
+                            echo"><a href=\"javascript:void(0)\" onclick=\"$function_name(1,$i)\">$i</a></li>";
+                        }
+                        if($page != $totalPage)
+                        {
+                            echo  "<li><a href=\"javascript:void(0)\" onclick=\"$function_name(1,".($page + 1).")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>";
+                        }
+                        ?>
+
+                    </ul>
                   <!--  <ul class="pagination" style="position: absolute;left:0;right: 0;">
                         <li>
                             <a href="#" aria-label="Previous">

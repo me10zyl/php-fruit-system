@@ -26,7 +26,7 @@ class InformationDAO extends DAO
         return $row;
     }
     function get($id){
-        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id where id = $id");
+        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id where i.id = $id");
         if(count($informations) > 0)
         {
             return $informations[0];
@@ -34,13 +34,31 @@ class InformationDAO extends DAO
         return null;
     }
 
-    function getByPage($page)
+    function getByPageViaPageSize($page,$pageSize)
     {
-        $offset = ($page - 1) * $this->pageSize;
-        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id limit $offset, $this->pageSize");
+        $offset = ($page - 1) * $pageSize;
+        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id order by time limit $offset, $pageSize");
         return $informations;
     }
 
+    function searchByPageViaPageSize($key,$page,$pageSize)
+    {
+        $offset = ($page - 1) * $pageSize;
+        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id order by time desc limit $offset, $pageSize where i.title like '%$key%';");
+        return $informations;
+    }
+
+    function getByPageViaPageSizeDesc($page,$pageSize)
+    {
+        $offset = ($page - 1) * $pageSize;
+        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id order by time desc limit $offset, $pageSize");
+        return $informations;
+    }
+
+    function getByPage($page)
+    {
+        return $this->getByPageViaPageSize($page,$this->pageSize);
+    }
     function count()
     {
         $count = SqlHelper::executeObject("select count(*) total from information");
@@ -52,33 +70,50 @@ class InformationDAO extends DAO
         return ceil($this->count() / $this->pageSize);
     }
     function getAll(){
-        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id;");
+        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id order by time;");
         return $informations;
     }
     function update($newInformation){
         $id = $newInformation->id;
         $title = $newInformation->title;
         $content = $newInformation->content;
-        $time = $newInformation->$time;
+        $time = $newInformation->time;
         $department = $newInformation->department;
-        $sql = 'UPDATE information SET';
-        if(isset($title))
+        $sql = 'UPDATE information SET ';
+        $isFirstSnippet = true;
+        if(!empty($title))
         {
             $sql = $sql."title = '$title'";
+            $isFirstSnippet = false;
         }
-        if(isset($content))
+        if(!empty($content))
         {
-            $sql = $sql.",content = '$content''";
-        }
-        if(isset($time))
-        {
-            $sql = $sql.",time = '$time'";
-        }
-        if(isset($department))
-        {
-            if(isset($department->department_id))
+            if(!$isFirstSnippet)
             {
-                $sql = $sql.',department_id = '.$department->department_id;
+                $sql = $sql.',';
+            }
+            $sql = $sql."content = '$content'";
+            $isFirstSnippet = false;
+        }
+        if(!empty($time))
+        {
+            if(!$isFirstSnippet)
+            {
+                $sql = $sql.',';
+            }
+            $sql = $sql."time = '$time'";
+            $isFirstSnippet = false;
+        }
+        if(!empty($department))
+        {
+            if(!empty($department->id))
+            {
+                if(!$isFirstSnippet)
+                {
+                    $sql = $sql.',';
+                }
+                $sql = $sql.'department_id = '.$department->id;
+                $isFirstSnippet = false;
             }
         }
         $sql = $sql." WHERE id = $id";
