@@ -28,9 +28,9 @@ $informations = $informationBiz->getByPageViaPageSizeDesc(1,$currentPageSize);
         <div class="col-md-6" style="height: 150px;position: relative;left: -15px;">
             <form style="position: absolute;bottom: 0;">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
+                    <input type="text" class="form-control" placeholder="Search for..." id="searchBox">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">搜索</button>
+                    <button class="btn btn-default" type="button" onclick="search()">搜索</button>
                 </span>
                 </div>
             </form>

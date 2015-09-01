@@ -51,6 +51,45 @@ function listMore() {
     })
 }
 
+function search(){
+    if($("#searchBox").val() == "")
+    {
+        $.ajax({
+            url: "restful/information.php/list",
+            type: "POST",
+            data: "page=1&pageSize=" + pageSize+"&reverse=true",
+            success: function (data) {
+                var json = JSON.parse(data);
+                var titleList = $('#titleList');
+                totalPage = json.totalPage;
+                titleList.html("");
+                for (var i = 0; i < json.list.length; i++) {
+                    titleList.append('<li class="list-group-item"><a href="javascript:void(0)"  onclick="seeInformationDetail('+json.list[i].id+')">'+json.list[i].title+'</a></li>');
+                }
+                titleList.append('<li  id="more"><a href="javascirpt:void(0)" style="float: right;margin-top: 20px;" onclick="listMore()">更多...</a></li>');
+                page = 1;
+            }
+        })
+        return;
+    }
+    $.ajax({
+        url: "restful/information.php/search",
+        type: "POST",
+        data: "key="+$("#searchBox").val(),
+        success: function (data) {
+            var json = JSON.parse(data);
+            if(json.list.length > 0 )
+            {
+                $("#titleList").html("");
+            }
+            for (var i = 0; i < json.list.length; i++) {
+                $("#titleList").append('<li class="list-group-item"><a href="javascript:void(0)"  onclick="seeInformationDetail('+json.list[i].id+')">'+json.list[i].title+'</a></li>');
+            }
+        }
+    })
+    //$("#titleList").html();
+}
+
 function seeInformationDetail(id) {
     $.ajax({
         url: "restful/information.php/get",

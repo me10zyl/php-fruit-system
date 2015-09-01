@@ -45,6 +45,15 @@ class InformationBiz
         return $departments;
     }
 
+    function searchByPageViaPageSize($key,$page,$pageSize)
+    {
+        return $this->informationDAO->searchByPageViaPageSize($key,$page,$pageSize);
+    }
+
+    function search($key){
+        return $this->informationDAO->search($key);
+    }
+
     function edit($newInformation)
     {
         return $this->informationDAO->update($newInformation);

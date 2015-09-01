@@ -44,8 +44,13 @@ class InformationDAO extends DAO
     function searchByPageViaPageSize($key,$page,$pageSize)
     {
         $offset = ($page - 1) * $pageSize;
-        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id order by time desc limit $offset, $pageSize where i.title like '%$key%';");
+        $informations = SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id  where i.title like '%$key%' order by time desc limit $offset, $pageSize;");
         return $informations;
+    }
+
+    function search($key)
+    {
+        return SqlHelper::executeObject("select i.id,i.title,i.content,i.time,d.name department from information i join department d on i.department_id = d.id where i.title like '%$key%' order by time desc ;");
     }
 
     function getByPageViaPageSizeDesc($page,$pageSize)

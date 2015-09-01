@@ -38,6 +38,12 @@ switch ($pathInfo) {
             print json_encode($informationBiz->getAll());
         }
         break;
+    case 'search':
+        $key = $_POST['key'];
+        print "{\"list\":";
+        print json_encode($informationBiz->search($key));
+        print "}";
+        break;
     case 'get':
         $id = $_POST['id'];
         print json_encode($informationBiz->get($id));
