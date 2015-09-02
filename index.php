@@ -51,9 +51,9 @@ $informations = $informationBiz->getByPageViaPageSizeDesc(1,$currentPageSize);
                     </div>
                     <div style="overflow: auto;height: 300px;">
                 <pre id="informationContent">
-                    <?php
-                        echo $informations[0]->content;
-                    ?>
+<?php
+    echo $informations[0]->content;
+?>
                 </pre>
                     </div>
                     <div style="float:right">类别：<span id="informationDepartment"><?php echo $informations[0]->department; ?></span></div>

@@ -48,7 +48,7 @@ $departments = $departmentBiz->getAll();
             </div>
             <div style="overflow: auto;height: 300px;">
                 <pre id="informationContent">
-                    <?php echo $information->content ?>
+<?php echo $information->content ?>
                 </pre>
                 <div style="float: right"><a href="javascript:void(0)" onclick="editInformationContent()"> 编辑</a></div>
             </div>
