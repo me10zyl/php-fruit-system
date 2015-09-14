@@ -6,7 +6,8 @@
  * Time: 16:59
  */
 require_once(dirname(__FILE__).'/../dal/dao/DepartmentDAO.class.php');
-class DepartmentBiz {
+require_once('Biz.class.php');
+class DepartmentBiz extends Biz{
     var $depatmentDAO;
     function __construct(){
         $this->depatmentDAO = new DepartmentDAO();
@@ -22,9 +23,9 @@ class DepartmentBiz {
         $departments = $this->depatmentDAO->getByPage($page);
         return $departments;
     }
-    function edit($newDepartment)
+    function edit($newUser)
     {
-        return $this->depatmentDAO->update($newDepartment);
+        return $this->depatmentDAO->update($newUser);
     }
     function count(){
         return $this->depatmentDAO->count();

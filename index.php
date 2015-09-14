@@ -5,8 +5,8 @@
  * Date: 2015/8/24
  * Time: 15:21
  */
-require_once 'class/bal/InformationBiz.class.php';
-require_once 'class/bal/DepartmentBiz.class.php';
+require_once 'class/bll/InformationBiz.class.php';
+require_once 'class/bll/DepartmentBiz.class.php';
 $currentPageSize = 8;
 $departmentBiz = new DepartmentBiz();
 $informationBiz = new InformationBiz();

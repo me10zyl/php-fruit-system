@@ -5,7 +5,7 @@
  * Date: 2015/8/24
  * Time: 15:16
  */
-require_once('class/bal/InformationBiz.class.php');
+require_once('class/bll/InformationBiz.class.php');
 $informationBiz = new InformationBiz();
 $informationPageOne = $informationBiz->getByPage(1);
 ?>

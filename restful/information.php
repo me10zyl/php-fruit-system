@@ -5,7 +5,7 @@
  * Date: 2015/8/26
  * Time: 17:04
  */
-require_once(dirname(__FILE__) . '/../class/bal/InformationBiz.class.php');
+require_once(dirname(__FILE__) . '/../class/bll/InformationBiz.class.php');
 require_once('Message.class.php');
 require_once('restfulUtil.php');
 require_once(dirname(__FILE__) . '/../class/dal/entity/Department.class.php');

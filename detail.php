@@ -5,8 +5,8 @@
  * Date: 2015/8/24
  * Time: 15:22
  */
-require_once('class/bal/InformationBiz.class.php');
-require_once('class/bal/DepartmentBiz.class.php');
+require_once('class/bll/InformationBiz.class.php');
+require_once('class/bll/DepartmentBiz.class.php');
 $id = $_GET['id'];
 $informationBiz = new InformationBiz();
 $information = $informationBiz->get($id);

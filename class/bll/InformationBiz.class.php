@@ -6,8 +6,8 @@
  * Time: 16:59
  */
 require_once(dirname(__FILE__) . '/../dal/dao/InformationDAO.class.php');
-
-class InformationBiz
+require_once('Biz.class.php');
+class InformationBiz extends Biz
 {
     var $informationDAO;
 
